@@ -1,6 +1,7 @@
 using System;
 using System.Text;
 using EditorTools.Attributes;
+using EditorTools.BaseTypes;
 using Robotics.Interfaces;
 using Robotics.Structs;
 using UnityEngine;
@@ -106,7 +107,13 @@ namespace Robotics.Driver
         {
             Debug.LogError("ROS Connector not found. Please install the ROS Connector module in your project to use this driver.");
         }
+        
+        public void updateAxisData(RoboticAxis[] axes)
+        {
+            throw new NotImplementedException();
+        }
 #endif
 
+        
     }
 }

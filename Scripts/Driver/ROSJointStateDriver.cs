@@ -9,6 +9,7 @@ using UnityEngine;
 #if MTFS_ROS_CONNECTOR
 using RosConnector.Abstract;
 using ros_messages.control_msgs;
+using ros_messages.sensor_msgs;
 #endif
 
 namespace Robotics.Driver
@@ -17,7 +18,7 @@ namespace Robotics.Driver
     /// Driver for robotic arms controlled by ROS
     /// </summary>
 #if MTFS_ROS_CONNECTOR
-    public class ROSJointTrajectoryDriver : ROSBehaviour, IRoboticDriver
+    public class ROSJoinStateDriver : ROSBehaviour, IRoboticDriver
 #else
     public class ROSJointTrajectoryDriver : ExtendedMonoBehaviour, IRoboticDriver
 #endif
@@ -47,8 +48,8 @@ namespace Robotics.Driver
 
             Debug.Log("Initialized Robotic Controller");
             roboticArm = GetComponent<IRoboticArm>();
-            Action<JointTrajectoryControllerStateMsg> onMessageAction = onRosMessage;
-            connection.Subscribe<JointTrajectoryControllerStateMsg>(topic, onMessageAction);
+            Action<JointStateMsg> onMessageAction = onRosMessage;
+            connection.Subscribe<JointStateMsg>(topic, onMessageAction);
         }
 
         // see IRoboticDriver
@@ -61,7 +62,7 @@ namespace Robotics.Driver
         /// Called when a new JointTrajectoryControllerState is received
         /// </summary>
         /// <param name="msg">JointTrajectoryControllerState Message received</param>
-        private void onRosMessage(JointTrajectoryControllerStateMsg msg)
+        private void onRosMessage(JointStateMsg msg)
         {
             Debug.Log("Message Received !");
             if (!isEnabled)
@@ -69,7 +70,7 @@ namespace Robotics.Driver
                 return;
             }
 
-            double[] radians = msg.actual.positions.ToArray();
+            double[] radians = msg.position.ToArray();
 
             float[] angles = new float[radians.Length];
 
